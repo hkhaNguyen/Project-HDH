@@ -72,6 +72,9 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
 - `la_so_duong "$x"`: trả 0 nếu `$x` là số nguyên dương, dùng `[[ $x =~ ^[0-9]+$ ]] && [ "$x" -gt 0 ]`.
 - `cd_ton_tai "$ma"`: `grep -q "^$ma|" "$CD_FILE"`.
 - `tam_dung`: `read -p "Nhan Enter de tiep tuc..."`.
+- `nhap_chuoi "<cau hoi>"`: hỏi lại tới khi nhập chuỗi không rỗng, không có `|`. Dùng: `ten=$(nhap_chuoi "Ten CD") || return 1`.
+- `nhap_so "<cau hoi>"`: hỏi lại tới khi nhập số nguyên dương. Dùng: `sl=$(nhap_so "So luong") || return 1`.
+- Cả 2 hàm trả 1 khi người dùng bấm Ctrl+D, nên luôn kèm `|| return 1` để thoát khỏi chức năng.
 
 ### 1.5 Quy ước khác
 
