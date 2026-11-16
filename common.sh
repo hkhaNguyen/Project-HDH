@@ -48,9 +48,20 @@ nhap_so() {   # $1 = prompt
     while true; do
         read -rp "$1: " x || return 1
         if la_so_duong "$x"; then
-            echo "$x"
+            echo "$((10#$x))"   # strip leading zeros, else bash reads 020000 as octal
             return 0
         fi
         echo "Phai la so nguyen duong" >&2
     done
+}
+
+# Format an amount in dong for display: 1500000 -> 1.500.000đ
+# printf pads by bytes and "đ" is 2 bytes, so money columns need width + 1.
+dinh_dang_tien() {   # $1 = amount (integer)
+    local n=$1 s=""
+    while [ "$n" -ge 1000 ]; do
+        s=$(printf ".%03d" $((n % 1000)))$s
+        n=$((n / 1000))
+    done
+    echo "$n${s}đ"
 }

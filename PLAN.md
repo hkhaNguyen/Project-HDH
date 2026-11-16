@@ -75,10 +75,12 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
 - `nhap_chuoi "<cau hoi>"`: hỏi lại tới khi nhập chuỗi không rỗng, không có `|`. Dùng: `ten=$(nhap_chuoi "Ten CD") || return 1`.
 - `nhap_so "<cau hoi>"`: hỏi lại tới khi nhập số nguyên dương. Dùng: `sl=$(nhap_so "So luong") || return 1`.
 - Cả 2 hàm trả 1 khi người dùng bấm Ctrl+D, nên luôn kèm `|| return 1` để thoát khỏi chức năng.
+- `dinh_dang_tien <so>`: `150000` thành `150.000đ`. `printf` căn cột theo byte mà `đ` chiếm 2 byte, nên cột tiền ở các dòng dữ liệu phải rộng hơn tiêu đề 1 ô (vd. tiêu đề `%12s`, dòng `%13s`).
 
 ### 1.5 Quy ước khác
 
 - Chạy và test trên máy ảo Linux.
+- Tiền tính bằng đồng: nhập và lưu số trơn (`20000`), khi in ra cho người dùng xem thì qua `dinh_dang_tien` (`20.000đ`).
 - Dữ liệu gõ **không dấu**. `tolower()` của `mawk` (mặc định trên Ubuntu) không xử lý được chữ có dấu.
 - Mỗi hàm tự in kết quả, xong thì gọi `tam_dung`.
 - File `.sh` dùng kết thúc dòng **LF**, không dùng CRLF.
@@ -106,10 +108,7 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
 - **Test:** thêm 3 bài cho 1 CD, rồi chạy lại b cho CD đó và kiểm tra STT chạy tiếp từ 4.
 
 ### c. Hiển thị thông tin CD ngắn gọn — `hienthi_ngangon`
-- **Làm gì:** in bảng, mỗi CD 1 dòng gồm Mã, Tên, Tác giả, Giá, Tồn.
-  ```bash
-  awk -F'|' '{printf "%-6s %-25s %-20s %10s %5s\n", $1, $2, $3, $6, $7}' "$CD_FILE"
-  ```
+- **Làm gì:** in bảng, mỗi CD 1 dòng gồm Mã, Tên, Tác giả, Giá, Tồn. Đọc từng dòng bằng `while IFS='|' read -r ...`, giá in qua `dinh_dang_tien`.
 - **Cần kiểm tra:** file rỗng thì báo "Chua co CD nao". Các cột phải thẳng hàng.
 
 ### d. Hiển thị thông tin CD đầy đủ — `hienthi_daydu`
@@ -183,10 +182,10 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
   ========== HOA DON BAN HANG ==========
   Ma HD: HD20261116153000   Ngay: 16/11/2026 15:30
   --------------------------------------
-  Ten CD               SL    Don gia    Thanh tien
-  Sky Tour              2    150000        300000
+  Ten CD               SL      Don gia    Thanh tien
+  Sky Tour              2     150.000đ      300.000đ
   --------------------------------------
-  TONG CONG:                               300000
+  TONG CONG:                                300.000đ
   ```
-  Phần tổng tiền cộng dồn trong `awk` và in ở khối `END{}`.
+  Đọc các dòng của hóa đơn bằng `while IFS='|' read -r ...`, cộng dồn tổng bằng `$(( ))`, mọi số tiền in qua `dinh_dang_tien`.
 - **Cần kiểm tra:** MaHD không tồn tại, file hóa đơn rỗng.

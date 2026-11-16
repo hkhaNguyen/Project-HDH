@@ -13,7 +13,7 @@ them_cd() {
     tacgia=$(nhap_chuoi "Tac gia") || return 1
     theloai=$(nhap_chuoi "The loai") || return 1
     nam=$(nhap_so "Nam phat hanh") || return 1
-    gia=$(nhap_so "Gia") || return 1
+    gia=$(nhap_so "Gia (dong, vd 20000)") || return 1
     sl=$(nhap_so "So luong") || return 1
 
     echo "$ma|$ten|$tacgia|$theloai|$nam|$gia|$sl" >> "$CD_FILE"
