@@ -13,18 +13,15 @@
 
 ```
 Project-HDH/
-├── cdshop.sh        # menu chính, source các module    (A)
-├── common.sh        # đường dẫn data + hàm dùng chung   (A)
-├── nhap.sh          # a, b                              (A)
-├── hienthi.sh       # c, d                              (A)
-├── timkiem.sh       # e, f, g                           (B)
-├── banhang.sh       # h, i                              (B)
+├── cdshop.sh        # toàn bộ chương trình (nộp 1 file)
 ├── data/
 │   ├── cd.txt       # mỗi dòng 1 CD
 │   ├── chitiet.txt  # mỗi dòng 1 bài hát của 1 CD
 │   └── hoadon.txt   # mỗi dòng 1 mặt hàng trong 1 hóa đơn
 └── .gitattributes   # *.sh text eol=lf
 ```
+
+Thứ tự các phần trong `cdshop.sh`: hàm dùng chung → a, b → c, d (A) → e, f, g → h, i (B) → menu chính (A).
 
 ### 1.2 Định dạng dữ liệu
 
@@ -53,19 +50,19 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
 
 ### 1.3 Tên hàm
 
-| Chức năng | Hàm | File |
-|---|---|---|
-| a. Thêm CD | `them_cd` | nhap.sh |
-| b. Thêm chi tiết CD | `them_chitiet` | nhap.sh |
-| c. Hiển thị ngắn gọn | `hienthi_ngangon` | hienthi.sh |
-| d. Hiển thị đầy đủ | `hienthi_daydu` | hienthi.sh |
-| e. Tìm theo thể loại | `tim_theloai` | timkiem.sh |
-| f. Tìm theo tác giả | `tim_tacgia` | timkiem.sh |
-| g. Tìm theo tên bài hát | `tim_baihat` | timkiem.sh |
-| h. Bán CD | `ban_cd` | banhang.sh |
-| i. In hóa đơn | `in_hoadon [MaHD]` | banhang.sh |
+| Chức năng | Hàm |
+|---|---|
+| a. Thêm CD | `them_cd` |
+| b. Thêm chi tiết CD | `them_chitiet` |
+| c. Hiển thị ngắn gọn | `hienthi_ngangon` |
+| d. Hiển thị đầy đủ | `hienthi_daydu` |
+| e. Tìm theo thể loại | `tim_theloai` |
+| f. Tìm theo tác giả | `tim_tacgia` |
+| g. Tìm theo tên bài hát | `tim_baihat` |
+| h. Bán CD | `ban_cd` |
+| i. In hóa đơn | `in_hoadon [MaHD]` |
 
-### 1.4 Nội dung `common.sh`
+### 1.4 Hàm dùng chung (đầu file `cdshop.sh`)
 
 - Biến `CD_FILE`, `CT_FILE`, `HD_FILE` trỏ tới các file trong `data/`.
 - `init_data`: tạo thư mục `data/` và các file rỗng nếu chưa có.
@@ -115,13 +112,10 @@ HD20261116153000|16/11/2026 15:30|CD001|Sky Tour|2|150000|300000
 - **Làm gì:** hỏi MaCD (Enter để xem tất cả CD). Với mỗi CD: in toàn bộ 7 trường lấy từ `cd.txt`, rồi in tracklist lọc từ `chitiet.txt` bằng `awk -F'|' -v m="$ma" '$1==m'`.
 - **Cần kiểm tra:** MaCD không tồn tại, CD chưa có bài hát nào (in "Chua co thong tin chi tiet").
 
-### j. Thoát chương trình và menu chính — `cdshop.sh`
+### j. Thoát chương trình và menu chính (cuối file `cdshop.sh`)
 - **Làm gì:**
   ```bash
-  #!/bin/bash
   cd "$(dirname "$0")"
-  source common.sh; source nhap.sh; source hienthi.sh
-  source timkiem.sh; source banhang.sh
   init_data
   while true; do
       clear
